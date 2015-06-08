@@ -45,7 +45,7 @@ class Connection(object):
         self._version = None
         self._static_info = None
 
-    def containers(self, all=False):
+    def containers(self, all=True):
         return ContainerList(self, all=all)
 
     @property

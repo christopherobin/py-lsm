@@ -57,14 +57,14 @@ class Image(object):
 
     @property
     def data(self):
-        return self.repo.docker.get_image(self.id)
+        return self.repo.conn.get_image(self.id)
 
     @property
     def history(self):
         if not self._history:
             self._history = [
                 History.from_api(history, self.repo)
-                for history in self.repo.docker.history(self.id)
+                for history in self.repo.conn.history(self.id)
             ]
         return self._history
 

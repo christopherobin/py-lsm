@@ -4,8 +4,8 @@ from .image import Image
 
 
 class Repository(Iterator):
-    def __init__(self, docker):
-        self.docker = docker
+    def __init__(self, conn):
+        self.conn = conn
 
         self._images = []
         self._iter = None
@@ -40,8 +40,15 @@ class Repository(Iterator):
             return Image.from_repository(self._by_id[id], self)
         return None
 
+    def pull(self, image, progress_fn=None):
+        if not callable(progress_fn):
+            self.conn.pull(image)
+        else:
+            for line in self.conn.pull(image):
+                progress_fn(line)
+
     def refresh(self):
-        self._images = self.docker.client.images(all=True)
+        self._images = self.conn.client.images(all=True)
         self._iter = iter(self._images)
         self._index()
 
